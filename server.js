@@ -11,6 +11,10 @@ import stream from "stream";
 import fs from "fs";
 import nodemailer from "nodemailer";
 import schedule from "node-schedule";
+import { Storage } from '@google-cloud/storage';
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const PORT = 5000;
@@ -22,13 +26,25 @@ app.use(bodyParser.json());
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+if (!process.env.GOOGLE_SERVICE_ACCOUNT_BASE64) {
+    throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_BASE64 environment variable");
+}
+const keyFile = JSON.parse(
+    Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_BASE64, 'base64').toString()
+);
+
+const storageKey = new Storage({
+    projectId: keyFile.project_id,
+    credentials: keyFile
+});
+// console.log("storageKey:", storageKey);
 // Google Drive authentication using service account
 const SCOPES = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/spreadsheets"
 ];
 const auth = new google.auth.GoogleAuth({
-    keyFile: "./cv-pipeline-01-e5f9b9a2b1be.json", // Update with your credentials file path
+    keyFile: storageKey, // Update with your credentials file path
     scopes: SCOPES
 });
 
@@ -234,7 +250,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         );
         externalResult = externalResponse.data;
         console.log("External API response:", externalResponse.data);
-        
+
     } catch (error) {
         console.error("Error sending payload to external endpoint:", error);
         externalResult = { error: "External API call failed", details: error.message };
