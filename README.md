@@ -1,54 +1,26 @@
-# React + TypeScript + Vite
+# Job Application Processing Pipeline
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Overview
+This project automates the processing of job applications by handling CV uploads, extracting data, verifying information, and storing applicant details in **Google Sheets**. It also saves CVs to **Google Drive** and notifies applicants via email.
 
-Currently, two official plugins are available:
+## 🛠️ Tech Stack
+- **Frontend:** React + TypeScript 
+- **Backend:** Node.js + Express (Hosted on DigitalOcean Droplet)
+- **Database:** Google Sheets API (for structured applicant data storage)
+- **File Storage:** Google Drive API (for CV storage)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔄 How It Works
+1. **Applicant submits a CV** via the frontend.
+2. **Backend (Express) extracts data** (name, email, phone number, etc.).
+3. **Data is verified** (e.g., checking valid email format).
+4. **Structured data is saved** to Google Sheets.
+5. **Uploaded CV will be saved** on Google Drive.
+6. **An email notification is sent** to the applicant about their application status.
 
-## Expanding the ESLint configuration
+## 🚀 Deployment
+- **Frontend (DigitalOcean App Platform)**
+- **Backend (DigitalOcean Droplet)**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
